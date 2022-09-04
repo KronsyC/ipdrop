@@ -1,0 +1,23 @@
+@import "./vars";
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,body,#__next{
+  height: 100%;
+}
+
+
+html{
+  background-color: $primary;
+}
+
+
+
+
+hr{
+  border: 1px solid $text-lighter;
+  margin: 20px 0;
+}

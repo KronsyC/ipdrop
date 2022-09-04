@@ -1,0 +1,50 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+}
+
+model Upload {
+  id         Int      @id @default(autoincrement())
+  ipAddr     String
+  title      String
+  ownerId    Int
+  sticky     Boolean
+  type       Int
+  dataId     Int
+  expiryDate DateTime
+  createdAt  DateTime @default(now())
+}
+
+model Url {
+  id   Int    @id @default(autoincrement())
+  href String
+}
+
+model File {
+  id         Int    @id @default(autoincrement())
+  bucketHash String @unique
+  name       String
+}
+
+model bd26d6d6_9ebe_51ef_963c_cd99b6cba322_20220904172920_vrepl {
+  id         Int      @id @default(autoincrement())
+  ipAddr     String
+  ownerId    Int
+  type       Int
+  dataId     Int
+  expiryDate DateTime
+  title      String
+  sticky     Boolean
+
+  @@map("_bd26d6d6_9ebe_51ef_963c_cd99b6cba322_20220904172920_vrepl")
+}

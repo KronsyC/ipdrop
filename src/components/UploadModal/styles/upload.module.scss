@@ -1,0 +1,101 @@
+@import "../../../styles/vars";
+
+
+.upload{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba($text-darker, 0.5);
+    width: 100%;
+    height: 100%;
+    h1{
+        text-align: center;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+    .inner{
+        background-color: rgb(255, 255, 255);
+        padding: 20px 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 16px $text-darkest;
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px 40px;
+
+
+            .title, .type{
+                box-shadow: 0 0 6px $text-light;
+                padding: 5px 10px;
+                background-color: transparent;
+                border: none;
+                
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            }
+            .type:hover{
+                cursor: pointer;
+            }
+            .sticky{
+                display: flex;
+                gap: 20px;
+            }
+            .submit{
+                margin-top: 20px;
+                align-self: c;
+                font-size: 1.2rem;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                padding: 14px 30px;
+                background-color: $accent;
+                border-radius: 8px;
+                border:none;
+                box-shadow: 0 0 8px $text-darker;
+                color: $text-darker;
+                font-weight: 600;
+                &:hover{
+                    cursor: pointer;
+                    box-shadow: 0 0 12px $text-darker;
+                    transition: box-shadow 0.1s linear;
+                }
+            }
+        }
+    }
+}
+
+.expiryPicker{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    label{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .set{
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        box-shadow: 0 0 4px $text-lighter;
+        .input{
+            padding: 5px 10px;
+            border: none;
+            width: 70px;
+            height: 100%;
+        }
+        .label{
+            padding: 5px 10px;
+            text-align: center;
+            width: 40px;
+            padding: 2px 0;
+            background-color: $text-lightest;
+            border: none;
+            &:hover{
+                cursor: pointer;
+            }
+            &>option:hover{
+                cursor: hover;
+            }
+        }
+
+    }
+
+}
