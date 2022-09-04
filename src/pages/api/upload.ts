@@ -64,6 +64,9 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
 
 async function createUpload(req:NextApiRequest, res:NextApiResponse){
     const ip = requestip.getClientIp(req)
+
+    console.log(`Incoming Request from ${ip}`);
+    
     const tok:JWT.JwtPayload = JWT.decode(req.cookies.token) as any
     const body = req.body
     
@@ -72,6 +75,8 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
         res.status(400).send(validator.error);
         return
     }
+    console.log("validated");
+    
 
     
 
@@ -81,6 +86,8 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
     let uploadId:number;
     switch(body.type){
         case 0:{
+            console.log("File Detected");
+            
             if(!body.filename){
                 res.status(400).send("File uploads require a name")
                 return
@@ -121,6 +128,7 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
             break;
         }
         case 1:{
+            console.log("URL Detected");
             // Url Uploads
             let url:string = body.data
             // if it doesnt contain a dot, it aint a url
