@@ -153,6 +153,8 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
         })
     }
     catch(err){
+        console.log("An error has been encountered");
+        
         res.status(500).json(err)
     }
 
