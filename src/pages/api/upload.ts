@@ -194,6 +194,9 @@ async function getUploads(req: NextApiRequest, res: NextApiResponse) {
         where: {
             ipAddr: {
                 equals: ip
+            },
+            expiryDate: {
+                gte: new Date()
             }
         }
     })
