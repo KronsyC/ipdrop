@@ -65,7 +65,6 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
 
 async function createUpload(req:NextApiRequest, res:NextApiResponse){
     res.send("Hello, World")
-    return
     const ip = requestip.getClientIp(req)
 
     console.log(`Incoming Request from ${ip}`);
@@ -158,7 +157,8 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
 
         
     }
-
+    res.send("Kinda works")
+    return
     const expiry = new Date(new Date().getTime() + body.expiry*60*1000);
 
     try{
