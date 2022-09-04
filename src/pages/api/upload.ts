@@ -73,7 +73,8 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
         return
     }
 
-
+    console.log("Creating Upload with params", body);
+    
 
     // Request Types:
     //  0: Raw file upload, expected base64
@@ -101,6 +102,7 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
             }
             catch{
                 res.status(500).send("Failed to upload file")
+                return
             }
 
             
