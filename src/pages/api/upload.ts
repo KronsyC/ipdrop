@@ -139,17 +139,23 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
 
     const expiry = new Date(new Date().getTime() + body.expiry*60*1000);
 
-    const upload = await prisma.upload.create({
-        data: {
-            ipAddr: ip,
-            expiryDate: expiry,
-            dataId: uploadId,
-            type: body.type,
-            ownerId: tok.sub as unknown as number,
-            title: body.title.trim(),
-            sticky: body.sticky
-        }
-    })
+    try{
+        const upload = await prisma.upload.create({
+            data: {
+                ipAddr: ip,
+                expiryDate: expiry,
+                dataId: uploadId,
+                type: body.type,
+                ownerId: tok.sub as unknown as number,
+                title: body.title.trim(),
+                sticky: body.sticky
+            }
+        })
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+
 
     res.send(`Successfully Created a new Upload for ${ip}`);
 }
