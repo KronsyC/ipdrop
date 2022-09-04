@@ -73,7 +73,6 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
         return
     }
 
-    console.log("Creating Upload with params", body);
     
 
     // Request Types:
@@ -86,17 +85,29 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
                 res.status(400).send("File uploads require a name")
                 return
             }
+            console.log("Has name");
+            
             try{
             // File Upload, connect to GCP and generate a File Object in the DB
             const fileHash = nanoid()
+
+            console.log(`generated hash ${fileHash}`);
+
             const fileRef = await prisma.file.create({
                 data: {
                     bucketHash: fileHash,
                     name: body.filename
                 }
             })
+            console.log("wrote to db");
+            
             const fileBuffer = Buffer.from(body.data, "base64");
+            console.log("bufferized");
+            
             const file = bucket.file(fileHash);
+
+            console.log("wrote to bucket");
+            
             file.save(fileBuffer);
             uploadId = fileRef.id;
             }
