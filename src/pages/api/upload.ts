@@ -64,7 +64,6 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
 }
 
 async function createUpload(req:NextApiRequest, res:NextApiResponse){
-    res.send("Hello, World")
     const ip = requestip.getClientIp(req)
 
     console.log(`Incoming Request from ${ip}`);
