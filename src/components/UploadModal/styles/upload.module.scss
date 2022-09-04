@@ -25,7 +25,7 @@
             padding: 20px 40px;
 
 
-            .title, .type{
+            .title, .type, .url{
                 box-shadow: 0 0 6px $text-light;
                 padding: 5px 10px;
                 background-color: transparent;
@@ -58,6 +58,12 @@
                     transition: box-shadow 0.1s linear;
                 }
             }
+
+            .typeContainer{
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
         }
     }
 }
@@ -67,9 +73,7 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    label{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+
     .set{
         display: flex;
         gap: 4px;

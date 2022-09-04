@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { Component } from '../types'
 import styles from "./styles/upload.module.scss"
 
-interface Props{
+interface Props {
     onComplete?: () => void
 }
-function _arrayBufferToBase64( buffer:ArrayBuffer ) {
+function _arrayBufferToBase64(buffer: ArrayBuffer) {
     var binary = '';
-    var bytes = new Uint8Array( buffer );
+    var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
     for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode( bytes[ i ] );
+        binary += String.fromCharCode(bytes[i]);
     }
-    return window.btoa( binary );
+    return window.btoa(binary);
 }
-function fileAsBase64(f:any){
+function fileAsBase64(f: any) {
     return new Promise((res, rej) => {
         const reader = new FileReader();
         reader.readAsArrayBuffer(f)
@@ -49,28 +49,28 @@ const UploadModal: Component<Props> = ({ className, onComplete }) => {
         else setType(1)
 
     }
-    async function handleSubmit(e:any){
-        
-        
+    async function handleSubmit(e: any) {
+
+
         e.preventDefault();
         console.log(expiry);
         console.log(type);
         console.log(url);
         console.log("sticky?", sticky);
-        
+
         let data = url;
-        let fname:string;
-        if(type == 0){
-            if(file.target.files.length > 1){
+        let fname: string;
+        if (type == 0) {
+            if (file.target.files.length > 1) {
                 alert("You can only upload one file at a time");
                 return
             }
             const f = file.target.files[0];
             console.log(f);
-            
+
             data = await fileAsBase64(f) as string
             fname = f.name;
-            
+
         }
         const body = JSON.stringify({
             title: title,
@@ -80,7 +80,7 @@ const UploadModal: Component<Props> = ({ className, onComplete }) => {
             data: data,
             filename: fname
         })
-        
+
         const result = await fetch("/api/upload", {
             method: "POST",
             body: body,
@@ -88,12 +88,12 @@ const UploadModal: Component<Props> = ({ className, onComplete }) => {
                 "content-type": "application/json"
             }
         })
-        if(result.ok){
-            if(onComplete)onComplete()
+        if (result.ok) {
+            if (onComplete) onComplete()
         }
-        
-        
-        
+
+
+
     }
     return (
         <div className={styles.upload + " " + className}>
@@ -101,25 +101,29 @@ const UploadModal: Component<Props> = ({ className, onComplete }) => {
                 <h1>Upload A Resource</h1>
 
                 <form onSubmit={handleSubmit}>
-                    <input type="text" name="title" id="" placeholder='Title' className={styles.title} onChange={e=>setTitle(e.target.value)} />
-                    <select name="" id="" defaultValue={type} onChange={handleTypeSelect} className={styles.type}>
-                        <option value="file">File</option>
-                        <option value="url">URL</option>
-                    </select>
+                    <input type="text" name="title" id="" placeholder='Title' className={styles.title} onChange={e => setTitle(e.target.value)} />
+                    <div className={styles.typeContainer}>
+                        <label htmlFor="type">Type:</label>
+                        <select name="" id="" defaultValue={type} onChange={handleTypeSelect} className={styles.type}>
+                            <option value="file">File</option>
+                            <option value="url">URL</option>
+                        </select>
+                    </div>
+
 
                     {
                         type == 0 ?
                             (
                                 <>
-                                    <input type="file" name="File" id="" onChange={f=>setFile(f)} />
+                                    <input type="file" name="File" id="" onChange={f => setFile(f)} />
                                 </>
-                            ) : <input type="text" placeholder='URL' onChange={e=>setUrl(e.target.value)} />
+                            ) : <input type="text" placeholder='URL' onChange={e => setUrl(e.target.value)} className={styles.url} />
                     }
 
-                    <ExpiryPicker onChange={e=>setExpiry(e)} />
+                    <ExpiryPicker onChange={e => setExpiry(e)} />
                     <div className={styles.sticky}>
                         <label htmlFor="sticky">Sticky?</label>
-                        <input type="checkbox" name="" id="" checked={sticky} onChange={e=>setSticky(s=>!s)} />
+                        <input type="checkbox" name="" id="" checked={sticky} onChange={e => setSticky(s => !s)} />
                     </div>
 
                     <input type="submit" value="Upload!" className={styles.submit} />
@@ -132,7 +136,7 @@ const UploadModal: Component<Props> = ({ className, onComplete }) => {
 }
 
 interface ExpiryProps {
-    onChange?: (offset:number)=>void;
+    onChange?: (offset: number) => void;
 }
 
 const ExpiryPicker: Component<ExpiryProps> = ({ className, children, onChange }) => {
@@ -152,10 +156,10 @@ const ExpiryPicker: Component<ExpiryProps> = ({ className, children, onChange })
     const [hours, setHours] = useState(0)
     const [days, setDays] = useState(0)
     function Validate() {
-        
-        setMinutes(m=>m>59?59:m);
-        setHours(h=>h>23?23:h);
-        setDays(d=>d>6?6:d);
+
+        setMinutes(m => m > 59 ? 59 : m);
+        setHours(h => h > 23 ? 23 : h);
+        setDays(d => d > 6 ? 6 : d);
     }
     function handleFirst(e: any) {
         const v = parseInt(e.target.value);
@@ -175,13 +179,13 @@ const ExpiryPicker: Component<ExpiryProps> = ({ className, children, onChange })
         setMinutes(v)
         Validate()
     }
-    useEffect(()=>{
+    useEffect(() => {
         Validate()
     }, [renders])
 
-    useEffect(()=>{
-        if(onChange){
-            onChange(hours*60 + days*24*60 + minutes)
+    useEffect(() => {
+        if (onChange) {
+            onChange(hours * 60 + days * 24 * 60 + minutes)
         }
     }, [hours, minutes, days])
     return (
@@ -190,7 +194,7 @@ const ExpiryPicker: Component<ExpiryProps> = ({ className, children, onChange })
             <div className={styles.set}>
                 <input type="number" name="" id="" defaultValue="20" className={styles.input} min="0"
                     onChange={handleFirst}
-                    value={renders===1?minutes:renders==2?hours:days}
+                    value={renders === 1 ? minutes : renders == 2 ? hours : days}
                 />
                 <select name="" id="" onChange={handleInitialSelect} defaultValue="1" className={styles.label}>
                     {
@@ -205,7 +209,7 @@ const ExpiryPicker: Component<ExpiryProps> = ({ className, children, onChange })
                 renders > 1 && (
                     <>
                         <div className={styles.set}>
-                            <input type="number" id='input2' defaultValue="0" className={styles.input} min="0" onChange={handleSecond} value={renders==2?minutes:hours} />
+                            <input type="number" id='input2' defaultValue="0" className={styles.input} min="0" onChange={handleSecond} value={renders == 2 ? minutes : hours} />
                             <label htmlFor="input2" className={styles.label}>{renders == 2 ? "M" : "H"}</label>
                         </div>
 
