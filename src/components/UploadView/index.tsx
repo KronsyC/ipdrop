@@ -22,7 +22,7 @@ const UploadView = () => {
 
     async function getUploads() {
         const res = await fetch("/api/upload")
-
+        if(!res.ok)return
         const data: any[] = await res.json()
 
         const uploads = data.map(d => {

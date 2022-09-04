@@ -85,6 +85,7 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
                 res.status(400).send("File uploads require a name")
                 return
             }
+            try{
             // File Upload, connect to GCP and generate a File Object in the DB
             const fileHash = nanoid()
             const fileRef = await prisma.file.create({
@@ -97,6 +98,11 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
             const file = bucket.file(fileHash);
             file.save(fileBuffer);
             uploadId = fileRef.id;
+            }
+            catch{
+                res.status(500).send("Failed to upload file")
+            }
+
             
             
             break;
