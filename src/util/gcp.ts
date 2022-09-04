@@ -1,11 +1,14 @@
 import {Storage} from "@google-cloud/storage"
 import path from "path";
 
-console.log(__dirname);
 
 const gc = new Storage({
-    keyFilename: path.join(process.env.ROOT, "gcp_credentials.json"),
-    projectId: "ringed-valor-361417",
+    projectId: process.env.PROJECT_ID,
+    credentials: {
+            private_key: process.env.PRIVATE_KEY,
+            client_email: process.env.CLIENT_EMAIL
+    }
+
 });
 const bucket = gc.bucket("ipdrop_filestorage")
 export {gc as storage, bucket};

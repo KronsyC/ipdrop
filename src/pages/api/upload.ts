@@ -109,20 +109,20 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
                 })
                 console.log("wrote to db");
 
-                // const fileBuffer = Buffer.from(body.data, "base64");
-                // console.log("bufferized");
+                const fileBuffer = Buffer.from(body.data, "base64");
+                console.log("bufferized");
 
-                // const file = bucket.file(fileHash);
+                const file = bucket.file(fileHash);
 
-                // console.log("wrote to bucket");
-                // file.on("error", () => {
-                //     console.log("error");
-                //     res.status(500).send("GCP ERROR")
+                console.log("wrote to bucket");
+                file.on("error", () => {
+                    console.log("error");
+                    res.status(500).send("GCP ERROR")
                     
-                // })
-                // file.save(fileBuffer, {
-                //     gzip: true
-                // });
+                })
+                file.save(fileBuffer, {
+                    gzip: true
+                });
                 uploadId = fileRef.id;
             }
             catch {
@@ -162,8 +162,6 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
 
 
     }
-    res.send("Kinda works")
-    return
     const expiry = new Date(new Date().getTime() + body.expiry * 60 * 1000);
 
     try {
