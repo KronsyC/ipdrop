@@ -245,6 +245,8 @@ async function getUploads(req: NextApiRequest, res: NextApiResponse) {
             createdAt: u.createdAt
         })
     }
+
+    res.setHeader("Cache-Control", "no-cache")
     res.json(formattedUploads)
 
 }
