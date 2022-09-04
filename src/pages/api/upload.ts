@@ -86,7 +86,7 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
     //  1: URL expected string
     let uploadId:number;
     switch(body.type){
-        case 0:{
+        case 1:{
             console.log("File Detected");
             
             if(!body.filename){
@@ -128,7 +128,7 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
             
             break;
         }
-        case 1:{
+        case 0:{
             console.log("URL Detected");
             // Url Uploads
             let url:string = body.data
