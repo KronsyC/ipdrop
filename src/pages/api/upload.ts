@@ -25,7 +25,7 @@ const bodySchema = sch.createSchema({
         expiry: {
             type: "number",
             min: 5,
-            max: 60 * 24 * 2 // 2 days
+            max: 60 * 24 * 10 // 10 days
         }, // Time to expiry (minutes)
         sticky: "boolean",
         filename: "string"
