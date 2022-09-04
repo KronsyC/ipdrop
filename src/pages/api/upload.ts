@@ -25,7 +25,7 @@ const bodySchema = sch.createSchema({
         expiry: {
             type: "number",
             min: 5,
-            max: 60*24*2 // 2 days
+            max: 60 * 24 * 2 // 2 days
         }, // Time to expiry (minutes)
         sticky: "boolean",
         filename: "string"
@@ -42,7 +42,7 @@ export const config = {
 }
 export default async function handleUpload(req: NextApiRequest, res: NextApiResponse) {
     console.log("CREATING AN UPLOAD OR SOMETHING PLEASE LOG");
-    
+
     if (!req.cookies.token) {
         res.status(403).send("Unauthorized, please create a user first");
         return
@@ -55,90 +55,94 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
         return
     }
     if (req.method == "POST") return await createUpload(req, res)
-    if( req.method == "GET" )return await getUploads(req, res)
+    if (req.method == "GET") return await getUploads(req, res)
     res.status(405).send(`Unsupported Method ${req.method}`)
     return
 
-    
+
 
 }
 
-async function createUpload(req:NextApiRequest, res:NextApiResponse){
+async function createUpload(req: NextApiRequest, res: NextApiResponse) {
     const ip = requestip.getClientIp(req)
 
     console.log(`Incoming Request from ${ip}`);
-    
-    const tok:JWT.JwtPayload = JWT.decode(req.cookies.token) as any
+
+    const tok: JWT.JwtPayload = JWT.decode(req.cookies.token) as any
     const body = req.body
-    
+
     validator(body)
-    if(validator.error){
+    if (validator.error) {
         res.status(400).send(validator.error);
         return
     }
     console.log("validated");
-    
 
-    
+
+
 
     // Request Types:
     //  0: Raw file upload, expected base64
     //  1: URL expected string
-    let uploadId:number;
-    switch(body.type){
-        case 1:{
+    let uploadId: number;
+    switch (body.type) {
+        case 0: {
             console.log("File Detected");
-            
-            if(!body.filename){
+
+            if (!body.filename) {
                 res.status(400).send("File uploads require a name")
                 return
             }
             console.log("Has name");
-            
-            try{
-            // File Upload, connect to GCP and generate a File Object in the DB
-            const fileHash = nanoid()
 
-            console.log(`generated hash ${fileHash}`);
+            try {
+                // File Upload, connect to GCP and generate a File Object in the DB
+                const fileHash = nanoid()
 
-            const fileRef = await prisma.file.create({
-                data: {
-                    bucketHash: fileHash,
-                    name: body.filename
-                }
-            })
-            console.log("wrote to db");
-            
-            const fileBuffer = Buffer.from(body.data, "base64");
-            console.log("bufferized");
-            
-            const file = bucket.file(fileHash);
+                console.log(`generated hash ${fileHash}`);
 
-            console.log("wrote to bucket");
-            
-            file.save(fileBuffer);
-            uploadId = fileRef.id;
+                const fileRef = await prisma.file.create({
+                    data: {
+                        bucketHash: fileHash,
+                        name: body.filename
+                    }
+                })
+                console.log("wrote to db");
+
+                const fileBuffer = Buffer.from(body.data, "base64");
+                console.log("bufferized");
+
+                const file = bucket.file(fileHash);
+
+                console.log("wrote to bucket");
+                file.on("error", () => {
+                    console.log("error");
+                    res.status(500).send("GCP ERROR")
+                    
+                })
+                file.save(fileBuffer);
+                uploadId = fileRef.id;
             }
-            catch{
+            catch {
                 res.status(500).send("Failed to upload file")
                 return
             }
 
-            
-            
+
+
             break;
         }
-        case 0:{
+        case 1: {
             console.log("URL Detected");
             // Url Uploads
-            let url:string = body.data
+            let url: string = body.data
             // if it doesnt contain a dot, it aint a url
-            if(!url.includes(".")){
+            if (!url.includes(".")) {
                 res.status(400).send("Invalid URL Received");
                 return
             }
-            url=url.trim()
-            if(!url.startsWith("http"))url = "https://"+url
+            url = url.trim()
+            if (!url.startsWith("http")) url = "https://" + url
             const urlObj = await prisma.url.create({
                 data: {
                     href: url
@@ -147,20 +151,20 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
             uploadId = urlObj.id
             break;
         }
-        default:{
+        default: {
             res.status(400).send(`No resource type exists with the id ${body.type}`)
             return
         }
 
 
 
-        
+
     }
     res.send("Kinda works")
     return
-    const expiry = new Date(new Date().getTime() + body.expiry*60*1000);
+    const expiry = new Date(new Date().getTime() + body.expiry * 60 * 1000);
 
-    try{
+    try {
         const upload = await prisma.upload.create({
             data: {
                 ipAddr: ip,
@@ -173,19 +177,19 @@ async function createUpload(req:NextApiRequest, res:NextApiResponse){
             }
         })
     }
-    catch(err){
+    catch (err) {
         console.log("An error has been encountered");
-        
+
         res.status(500).json(err)
     }
 
 
     res.send(`Successfully Created a new Upload for ${ip}`);
 }
-async function getUploads(req:NextApiRequest, res:NextApiResponse){
+async function getUploads(req: NextApiRequest, res: NextApiResponse) {
     const ip = requestip.getClientIp(req);
     console.log(ip);
-    
+
     const uploads = await prisma.upload.findMany({
         where: {
             ipAddr: {
@@ -193,21 +197,21 @@ async function getUploads(req:NextApiRequest, res:NextApiResponse){
             }
         }
     })
-    interface FileRef{
+    interface FileRef {
         hash: string;
         name: string;
     }
-    interface Upload{
+    interface Upload {
         type: number
         title: string
         data: string | FileRef // Shortened URL or download link
         expires: Date
         createdAt: Date
     }
-    const formattedUploads:Upload[] = []
-    for(let u of uploads){
-        let data:string|FileRef;
-        if(u.type == 0){
+    const formattedUploads: Upload[] = []
+    for (let u of uploads) {
+        let data: string | FileRef;
+        if (u.type == 0) {
             const file = await prisma.file.findFirstOrThrow({
                 where: {
                     id: {
@@ -220,7 +224,7 @@ async function getUploads(req:NextApiRequest, res:NextApiResponse){
                 name: file.name
             }
         }
-        else if(u.type == 1){
+        else if (u.type == 1) {
             const url = await prisma.url.findFirst({
                 where: {
                     id: {
