@@ -41,7 +41,8 @@ export const config = {
     }
 }
 export default async function handleUpload(req: NextApiRequest, res: NextApiResponse) {
-
+    console.log("CREATING AN UPLOAD OR SOMETHING PLEASE LOG");
+    
     if (!req.cookies.token) {
         res.status(403).send("Unauthorized, please create a user first");
         return
