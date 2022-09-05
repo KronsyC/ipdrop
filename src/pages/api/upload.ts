@@ -36,12 +36,11 @@ const validator = sch.buildValidator(bodySchema)
 export const config = {
     api: {
         bodyParser: {
-            sizeLimit: '11mb' // Set desired value here
+            sizeLimit: '20mb' // Set desired value here
         }
     }
 }
 export default async function handleUpload(req: NextApiRequest, res: NextApiResponse) {
-    console.log("CREATING AN UPLOAD OR SOMETHING PLEASE LOG");
 
     if (!req.cookies.token) {
         res.status(403).send("Unauthorized, please create a user first");
@@ -99,26 +98,32 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
                 // File Upload, connect to GCP and generate a File Object in the DB
                 const fileHash = nanoid()
 
-                console.log(`generated hash ${fileHash}`);
 
+
+                const fileBuffer = Buffer.from(body.data, "base64");
+                const size = fileBuffer.byteLength
+                const sizeInMb = size / 1024 / 1024
+                console.log(`received file with ${sizeInMb}mb`);
+                if (sizeInMb > 10) {
+                    res.status(400).send("File Too Large")
+                    return
+                }
+
+
+                const file = bucket.file(fileHash);
                 const fileRef = await prisma.file.create({
+
                     data: {
                         bucketHash: fileHash,
                         name: body.filename
                     }
                 })
-                console.log("wrote to db");
-
-                const fileBuffer = Buffer.from(body.data, "base64");
-                console.log("bufferized");
-
-                const file = bucket.file(fileHash);
 
                 console.log("wrote to bucket");
                 file.on("error", () => {
                     console.log("error");
                     res.status(500).send("GCP ERROR")
-                    
+
                 })
                 file.save(fileBuffer, {
                     gzip: true
