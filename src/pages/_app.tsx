@@ -2,10 +2,17 @@ import '../styles/globals.scss'
 import "normalize.css"
 import cookies from "cookie"
 import { AppContext } from 'next/app'
-import { isError } from 'util'
-
+import Head from "next/head"
 function MyApp({ Component, pageProps }:any) {
-  return <Component {...pageProps} />
+  return <>
+      <Head>
+        <title>IPDrop | Local file sharing</title>
+        <meta name="description" content="IpDrop is a free online service for sharing files and links with people in your local network" />
+        <meta name="author" content='Casey Allen (https://github.com/CaseyAllen)' />
+        <meta name="keywords" content="filesharing, local, file, url, ip file, airdrop, ipdrop, share" />
+      </Head>
+  <Component {...pageProps} />
+  </>
 }
 MyApp.getInitialProps = async(context:AppContext) =>{
   
