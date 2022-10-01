@@ -63,6 +63,58 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
 
 }
 async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
+    const target = req.query.id;
+    if(target==undefined || isNaN(parseInt(target))){
+        res.status(400).send("You must provide a valid deletion id");
+        return
+    }
+    const id = parseInt(target);
+
+    // attempt to fetch the post with the given id
+    const post = await prisma.upload.findFirst({
+        where: {
+            id: {
+                equals: id
+            }
+        }
+    })
+    if(!post){
+        res.status(404).send("Failed to find post with id "+id);
+        return
+    }
+    // check ownership
+    const user = JWT.decode( req.cookies.token)
+    const sub = user.sub
+    if(post.ownerId !== sub){
+        res.status(403).send("Unauthorized to delete this upload");
+        return
+    }
+    // Delete the upload entry and it's bucket file
+    const del = await prisma.upload.delete({
+        where: {
+            id: id
+        }
+    })
+    if(del.type == 0){
+        // delete the file object
+        const file = await prisma.file.delete({
+            where: {
+                id: del.dataId
+            }
+        })
+        // Remove the file from the GCP Bucket
+        const fileEntry = bucket.file(file.bucketHash);
+        await fileEntry.delete();
+    }
+    else if(del.type == 1){
+        // delete the url object
+        const url = await prisma.url.delete({
+            where: {
+                id: del.dataId
+            }
+        })
+    }
+    res.send("Successfully deleted upload with id " + id);
 
 }
 async function createUpload(req: NextApiRequest, res: NextApiResponse) {
