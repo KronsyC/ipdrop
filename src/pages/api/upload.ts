@@ -64,7 +64,7 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
 }
 async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
     const target = req.query.id;
-    if(target==undefined || isNaN(parseInt(target))){
+    if(target==undefined || Array.isArray(target) || isNaN(parseInt(target))){
         res.status(400).send("You must provide a valid deletion id");
         return
     }
@@ -84,7 +84,7 @@ async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
     }
     // check ownership
     const user = JWT.decode( req.cookies.token)
-    const sub = user.sub
+    const sub = user.sub as unknown as number
     if(post.ownerId !== sub){
         res.status(403).send("Unauthorized to delete this upload");
         return
