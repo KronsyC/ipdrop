@@ -15,6 +15,7 @@ model User {
 
 model Upload {
   id         Int      @id @default(autoincrement())
+  password   String?
   ipAddr     String
   title      String
   ownerId    Int
@@ -34,17 +35,4 @@ model File {
   id         Int    @id @default(autoincrement())
   bucketHash String @unique
   name       String
-}
-
-model bd26d6d6_9ebe_51ef_963c_cd99b6cba322_20220904172920_vrepl {
-  id         Int      @id @default(autoincrement())
-  ipAddr     String
-  ownerId    Int
-  type       Int
-  dataId     Int
-  expiryDate DateTime
-  title      String
-  sticky     Boolean
-
-  @@map("_bd26d6d6_9ebe_51ef_963c_cd99b6cba322_20220904172920_vrepl")
 }

@@ -28,7 +28,8 @@ const bodySchema = sch.createSchema({
             max: 60 * 24 * 10 // 10 days
         }, // Time to expiry (minutes)
         sticky: "boolean",
-        filename: "string"
+        filename: "string",
+        password: "string"
     },
 })
 const validator = sch.buildValidator(bodySchema)
@@ -64,6 +65,7 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
 }
 async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
     const target = req.query.id;
+    const password = req.query.password
     if(target==undefined || Array.isArray(target) || isNaN(parseInt(target))){
         res.status(400).send("You must provide a valid deletion id");
         return
@@ -82,10 +84,15 @@ async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
         res.status(404).send("Failed to find post with id "+id);
         return
     }
+    if(Array.isArray(password)){
+        res.status(400).send("Cannot provide multiple passwords")
+        return
+    }
     // check ownership
     const user = JWT.decode( req.cookies.token)
     const sub = user.sub as unknown as number
-    if(post.ownerId !== sub){
+    if(post.ownerId !== sub && !(password && post.password && password == post.password)){
+        // Check if the password is correct and matches
         res.status(403).send("Unauthorized to delete this upload");
         return
     }
@@ -224,6 +231,8 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
     }
     const expiry = new Date(new Date().getTime() + body.expiry * 60 * 1000);
 
+    // Password
+    const password = body.password
     try {
         const upload = await prisma.upload.create({
             data: {
@@ -233,7 +242,8 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
                 type: body.type,
                 ownerId: tok.sub as unknown as number,
                 title: body.title.trim(),
-                sticky: body.sticky
+                sticky: body.sticky,
+                password: password
             }
         })
     }
