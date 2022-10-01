@@ -55,13 +55,16 @@ export default async function handleUpload(req: NextApiRequest, res: NextApiResp
     }
     if (req.method == "POST") return await createUpload(req, res)
     if (req.method == "GET") return await getUploads(req, res)
+    if (req.method == "DELETE")return await deleteUpload(req, res);
     res.status(405).send(`Unsupported Method ${req.method}`)
     return
 
 
 
 }
+async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
 
+}
 async function createUpload(req: NextApiRequest, res: NextApiResponse) {
     const ip = requestip.getClientIp(req)
 
@@ -215,6 +218,7 @@ async function getUploads(req: NextApiRequest, res: NextApiResponse) {
         data: string | FileRef // Shortened URL or download link
         expires: Date
         createdAt: Date
+        id: number
     }
     const formattedUploads: Upload[] = []
     for (let u of uploads) {
@@ -247,7 +251,8 @@ async function getUploads(req: NextApiRequest, res: NextApiResponse) {
             data: data,
             expires: u.expiryDate,
             title: u.title,
-            createdAt: u.createdAt
+            createdAt: u.createdAt,
+            id: u.id
         })
     }
 
