@@ -22,18 +22,18 @@
         gap: 4px;
         .title{
             font-size: 1.2rem;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-family: Verdana, Helvetica, Arial, sans-serif;
             display: flex;
         }
         .type{
             color: $text-darker;
-            font-weight: 500;
+            font-weight: bold;
             font-size: 0.9rem;
             text-transform: uppercase;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-family: Verdana, Helvetica, Arial, sans-serif;
         }
         .expiry{
-
+            font-family: Verdana, Helvetica, Arial, sans-serif;
         }
 
         .download{
