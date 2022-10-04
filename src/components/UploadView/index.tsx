@@ -71,7 +71,7 @@ const UploadView = () => {
                     <div className={s.upload}>
                         <h3 className={s.title}>{upload.title}</h3>
                         <p className={s.type}>{upload.type}</p>
-                        <p className={s.expiry}>Expires <code className={s.code}>{upload.expires.toLocaleDateString()} {upload.expires.toLocaleTimeString()}</code></p>
+                        <p className={s.expiry}>Expires <code className={s.code}>{upload.expires.toLocaleDateString()}, {upload.expires.toLocaleTimeString()}</code></p>
                         {
                             upload.type == "url" ?
                                 <a className={s.url} href={upload.data as string}>{upload.data as string}</a>
