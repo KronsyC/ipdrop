@@ -246,6 +246,7 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
                 ownerId: tok.sub as unknown as number,
                 title: body.title.trim(),
                 sticky: body.sticky,
+                //@ts-expect-error
                 password: password
             }
         })
