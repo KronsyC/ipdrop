@@ -93,8 +93,9 @@ async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
     const sub = user.sub as unknown as number
     console.log(post);
     
-    // const tgt_password = post.password;
-    if(post.ownerId !== sub /*&& !(password && tgt_password && password == tgt_password)*/){
+    //@ts-expect-error
+    const tgt_password = post.password as string | undefined;
+    if(post.ownerId !== sub && !(password && tgt_password && password == tgt_password)){
         // Check if the password is correct and matches
         res.status(403).send("Unauthorized to delete this upload");
         return
@@ -184,7 +185,6 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
                     }
                 })
 
-                console.log("wrote to bucket");
                 file.on("error", () => {
                     console.log("error");
                     res.status(500).send("GCP ERROR")
