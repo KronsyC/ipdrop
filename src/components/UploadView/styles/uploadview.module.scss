@@ -38,6 +38,13 @@
         .url{
             font-family: Verdana, Helvetica, Arial, sans-serif;
         }
+        .code{
+            background-color: black;
+            color: #d4f1ef;
+            border-radius: 0.2em;
+            border-left: 0.2em solid black;
+            border-right: 0.3em solid black;
+        }
         .download{
             width: 90%;
             background-color: $text-lighter;
