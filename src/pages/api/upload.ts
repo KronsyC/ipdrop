@@ -91,7 +91,10 @@ async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
     // check ownership
     const user = JWT.decode( req.cookies.token)
     const sub = user.sub as unknown as number
-    if(post.ownerId !== sub && !(password && post.password && password == post.password)){
+    console.log(post);
+    
+    // const tgt_password = post.password;
+    if(post.ownerId !== sub /*&& !(password && tgt_password && password == tgt_password)*/){
         // Check if the password is correct and matches
         res.status(403).send("Unauthorized to delete this upload");
         return
