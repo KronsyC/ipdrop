@@ -74,7 +74,7 @@ const UploadView = () => {
                         <p className={s.expiry}>Expires <code>{upload.expires.toLocaleDateString()} {upload.expires.toLocaleTimeString()}</code></p>
                         {
                             upload.type == "url" ?
-                                <a href={upload.data as string}>{upload.data as string}</a>
+                                <a className={s.url} href={upload.data as string}>{upload.data as string}</a>
                                 :
                                 <a className={s.download} download={(upload.data as fileinfo).name} href={"/api/files/"+(upload.data as fileinfo).hash}>
                                     <FontAwesomeIcon icon={faDownload} className={s.icon}/>
