@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }:any) {
   return <>
       <Head>
         <title>IPDrop | Local file sharing</title>
-        <meta name="description" content="IpDrop is a free online service for sharing files and links with people in your local network" />
+        <meta name="description" content="IPDrop is a free online service for sharing files and links with people in your local network" />
         <meta name="author" content='Casey Allen (https://github.com/CaseyAllen)' />
         <meta name="keywords" content="filesharing, local, file, url, ip file, airdrop, ipdrop, share" />
       </Head>
