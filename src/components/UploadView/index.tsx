@@ -65,9 +65,14 @@ const UploadView = () => {
     }, [])
     
     /** DD-MM-YYYY format */
-    var dateobj = upload.expires
-    function pad(n) {return n < 10 ? "0"+n : n;}
-    var result = pad(dateobj.getDate())+"/"+pad(dateobj.getMonth()+1)+"/"+dateobj.getFullYear();
+    var result = "fail"; /** placeholder variable */
+    try {
+        var dateobj = upload.expires
+        function pad(n) {return n < 10 ? "0"+n : n;}
+        var result = pad(dateobj.getDate())+"/"+pad(dateobj.getMonth()+1)+"/"+dateobj.getFullYear();
+    } catch (error) {
+        console.log(error.message)
+    }
     
     return (
         <div className={s.container}>
