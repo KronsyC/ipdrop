@@ -235,7 +235,7 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
     const expiry = new Date(new Date().getTime() + body.expiry * 60 * 1000);
 
     // Password
-    const password = body.password
+    const password = body.password || ""
     try {
         const upload = await prisma.upload.create({
             data: {
