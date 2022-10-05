@@ -64,16 +64,6 @@ const UploadView = () => {
         }
     }, [])
     
-    /** DD-MM-YYYY format */
-    var result = "fail"; /** placeholder variable */
-    try {
-        var dateobj = upload.expires
-        function pad(n) {return n < 10 ? "0"+n : n;}
-        var result = pad(dateobj.getDate())+"/"+pad(dateobj.getMonth()+1)+"/"+dateobj.getFullYear();
-    } catch (error) {
-        console.log(error.message)
-    }
-    
     return (
         <div className={s.container}>
             {
@@ -81,7 +71,7 @@ const UploadView = () => {
                     <div className={s.upload}>
                         <h3 className={s.title}>{upload.title}</h3>
                         <p className={s.type}>{upload.type}</p>
-                        <p className={s.expiry}>Expires <code className={s.code}>{result}, {upload.expires.toLocaleTimeString()}</code></p>
+                        <p className={s.expiry}>Expires <code className={s.code}>{upload.expires.toLocaleDateString("en-GB")}, {upload.expires.toLocaleTimeString()}</code></p>
                         {
                             upload.type == "url" ?
                                 <a className={s.url} href={upload.data as string}>{upload.data as string}</a>
