@@ -93,7 +93,6 @@ async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
     const sub = user.sub as unknown as number
     console.log(post);
     
-    //@ts-expect-error
     const tgt_password = post.password as string | undefined;
     if(post.ownerId !== sub && !(password && tgt_password && password == tgt_password)){
         // Check if the password is correct and matches
