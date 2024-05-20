@@ -2,7 +2,8 @@ import JWT from 'jsonwebtoken';
 import { nanoid } from 'nanoid';
 import { NextApiResponse, NextApiRequest } from 'next';
 import Schematica from "schematica"
-import { bucket } from '../../util/gcp';
+import * as storage from "../../util/storage"
+// import { bucket } from '../../util/gcp';
 import prisma from '../../util/prisma';
 import requestip from "request-ip"
 
@@ -112,9 +113,8 @@ async function deleteUpload(req: NextApiRequest, res: NextApiResponse) {
                 id: del.dataId
             }
         })
-        // Remove the file from the GCP Bucket
-        const fileEntry = bucket.file(file.bucketHash);
-        await fileEntry.delete();
+
+        await storage.delete_file(file.bucketHash)
     }
     else if(del.type == 1){
         // delete the url object
@@ -175,7 +175,6 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
                 }
 
 
-                const file = bucket.file(fileHash);
                 const fileRef = await prisma.file.create({
 
                     data: {
@@ -184,14 +183,9 @@ async function createUpload(req: NextApiRequest, res: NextApiResponse) {
                     }
                 })
 
-                file.on("error", () => {
-                    console.log("error");
-                    res.status(500).send("GCP ERROR")
-
-                })
-                file.save(fileBuffer, {
-                    gzip: true
-                });
+                console.log("UPLOADING TO STORAGE")
+                await storage.upload_file(fileHash, fileBuffer)
+                console.log("UPLOADED TO STORAGE")
                 uploadId = fileRef.id;
             }
             catch {

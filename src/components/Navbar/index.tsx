@@ -1,7 +1,7 @@
 import { Component } from "../types"
 import style from "./styles/navbar.module.scss"
 interface Props{
-  children: React.ReactElement|React.ReactElement[]
+  children?: React.ReactElement|React.ReactElement[]
 }
 
 const Navbar:Component<Props> = ({children, className}) => {

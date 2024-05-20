@@ -1,0 +1,12 @@
+version: '3'
+services:
+  database:
+    image: postgres:latest
+    container_name: database
+    environment:
+      POSTGRES_USER: ipdrop
+      POSTGRES_PASSWORD: password1
+      POSTGRES_DB: ipdrop 
+    ports:
+      - "5432:5432"
+    restart: always 

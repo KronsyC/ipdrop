@@ -9,5 +9,6 @@ module.exports = {
   ...nextConfig,
   env: {
     ROOT: __dirname
-  }
+  },
+  output: "standalone"
 }

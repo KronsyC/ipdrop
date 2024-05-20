@@ -12,8 +12,7 @@ const Home = () => {
 
     <main className={styles.page}>
 
-      <Navbar className={styles.navbar}>
-      </Navbar>
+      <Navbar className={styles.navbar} />
       <div className={styles.content}>
         {modal && 
         <UploadModal className={styles.uploadModal} onComplete={()=>setModal(m=>!m)} />

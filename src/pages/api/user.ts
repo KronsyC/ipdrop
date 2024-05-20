@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import JWT from "jsonwebtoken"
 import prisma from "../../util/prisma";
-import {serialize as mkCookie} from "cookie"
 import reqip from "request-ip"
 export default async function userHandler(req:NextApiRequest, res:NextApiResponse){
     if(req.method !== "POST"){

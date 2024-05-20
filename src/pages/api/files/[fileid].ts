@@ -1,6 +1,6 @@
 import JWT from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { bucket } from '../../../util/gcp';
+import * as storage from '../../../util/storage';
 import prisma from '../../../util/prisma';
 import reqip from "request-ip"
 
@@ -46,11 +46,12 @@ export default async function fileHandler(req: NextApiRequest, res: NextApiRespo
         return
     }
     
-    const file = bucket.file(fileId)
-    
+    const file = await storage.read_file(f.bucketHash)
 
+    res.writeHead(200, {
+        "content-length": file.ContentLength,
+        "content-disposition": `attachment; filename="${f.name}"`,
+    })
+    res.write(await file.Body.transformToByteArray())
 
-    file.createReadStream().pipe(res)
-
-    // res.send(`get file ${fileId}`);
 }

@@ -22,9 +22,9 @@ MyApp.getInitialProps = async(context:AppContext) =>{
   const tok = cookies.parse(req.headers.cookie??"").token
   const host = req.headers.host
   if(!tok){
-    // Create a new user
+    // Create a new user, this is horrible but im lazy
     try{
-      const fres = await fetch("http://"+host+"/api/user", {
+      const fres = await fetch("http://localhost:3000/api/user", {
         method: "POST"
       })
       const text = await fres.text()
